@@ -3,7 +3,8 @@ SECTIONS
 {
     .boot_code :
     {
-        . = ALIGN(4);        
+        . = ALIGN(4);    
+        KEEP (*(.reset))    
         *(.boot_code)
         *(.boot_code*)
         . = ALIGN(4);
@@ -12,14 +13,13 @@ SECTIONS
     .text :
     {
         . = ALIGN(4);
-        KEEP (*(.reset))
         *(.text)
         *(.text*)
         KEEP (*(.init))
         KEEP (*(.fini))
         KEEP (*(.eh_frame))
         . = ALIGN(4);
-    } >FLASH
+    } >QSPI
 
     /* Sections required by the standard libraries. */
     .ARM.extab :

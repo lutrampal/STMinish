@@ -8,12 +8,14 @@
 #ifndef _MCU_H
 #define _MCU_H
 
-
+namespace hardware
+{
 #ifdef MCU_STM32F750
     #include "stm32f750.hpp"
 #else
     #error "Undefined MCU"
 #endif
+}  // namespace hardware
 
 
 #endif

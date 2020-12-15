@@ -18,7 +18,7 @@ WFLAGS = -Wall -Wpedantic -Wextra -Wno-unused-parameter
 
 CXXFLAGS = -c -O0 -mcpu=$(MCU) -mthumb -g3 -mhard-float -mfloat-abi=hard \
 	-mfpu=fpv5-sp-d16 -ffunction-sections -fdata-sections \
-	-fno-exceptions -fno-rtti --specs=nosys.specs $(WFLAGS)
+	-fno-exceptions -std=c++17 -fno-rtti --specs=nosys.specs $(WFLAGS)
 LFLAGS = -T $(LD_SCRIPT) -mcpu=$(MCU) -mthumb -lgcc -mhard-float \
 	-mfloat-abi=hard -mfpu=fpv5-sp-d16 -Wl,--gc-sections -Wl,-L./ld \
 	--specs=nosys.specs $(WFLAGS)
@@ -56,11 +56,7 @@ all: $(TARGET).bin
 flash-n-debug: all
 	$(GDB) $(TARGET).elf \
 		-ex 'target extended-remote :$(GDB_SERVER_PORT)' -ex load \
-		-ex 'tui e' -ex 'layout regs' -ex 'break reset_handler' -ex continue -ex 'focus cmd'
-
-flash-n-debug-no-tui: all
-	$(GDB) $(TARGET).elf \
-		-ex 'target extended-remote :$(GDB_SERVER_PORT)' -ex load -ex 'break main' -ex continue
+		-ex 'tui e' -ex 'layout regs' -ex 'break main' -ex 'break handleError' -ex continue -ex 'focus cmd'
 
 clean:
 	rm -rf $(BUILD_DIR)/*

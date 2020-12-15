@@ -3,6 +3,7 @@
  * INCLUDE DIRECTIVES
  ******************************************************************************/
 
+#include <cstdint>
 
 /*******************************************************************************
  * EXTERN FUNCTION IMPLEMENTATIONS
@@ -10,7 +11,8 @@
 
 int main(void)
 {
-    unsigned dead_beef = 0xDEADBEEF;
+    uint32_t dead_beef_addr                      = 0xC0000000;
+    *reinterpret_cast<uint32_t*>(dead_beef_addr) = 0xDEADBEEF;
 
     while (1) {}
 

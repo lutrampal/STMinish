@@ -6,6 +6,9 @@
 #ifndef STM32F7508_DK_H
 #define STM32F7508_DK_H
 
+#include <stm32f750xx.h>
+
+
 /* I/O assignment for the STM32F7508 development kit */
 #define LCD_B0_Pin                     4
 #define LCD_B0_GPIO_Port               GPIOE
@@ -316,50 +319,51 @@
 #define ARDUINO_MOSI_PWM_D11_Pin       15
 #define ARDUINO_MOSI_PWM_D11_GPIO_Port GPIOB
 
-#define QSPI_GPIO_AF9  9
-#define QSPI_GPIO_AF10 10
-#define FMC_GPIO_AF12  12
-#define LCD_GPIO_AF14  14
+/* Frequency of the oscillator used as input for the HSE */
+constexpr unsigned hse_in_clk_hz = 25000000;
 
-#define MRD_BurstLength_Pos    (0U)
-#define MRD_BurstLength_Msk    (0b111 << MRD_BurstLength_Pos)
-#define MRD_BurstLength        MRD_BurstLength_Msk
-#define MRD_BurstType_Pos      (3U)
-#define MRD_BurstType_Msk      (0b1 << MRD_BurstType_Pos)
-#define MRD_BurstType          MRD_BurstType_Msk
-#define MRD_LatencyMode_Pos    (4U)
-#define MRD_LatencyMode_Msk    (0b111 << MRD_LatencyMode_Pos)
-#define MRD_LatencyMode        MRD_LatencyMode_Msk
-#define MRD_OperatingMode_Pos  (7U)
-#define MRD_OperatingMode_Msk  (0b11 << MRD_OperatingMode_Pos)
-#define MRD_OperatingMode      MRD_OperatingMode_Msk
-#define MRD_WriteBurstMode_Pos (9U)
-#define MRD_WriteBurstMode_Msk (0b1 << MRD_WriteBurstMode_Pos)
-#define MRD_WriteBurstMode     MRD_WriteBurstMode_Msk
+/* Alternate functions for GPIOs */
+constexpr unsigned qspi_gpio_af9  = 9;
+constexpr unsigned qspi_gpio_af10 = 10;
+constexpr unsigned fmc_gpio_af12  = 12;
+constexpr unsigned lcd_gpio_af14  = 14;
 
-#define SDRAM_TRCD_NS (18U)
-#define SDRAM_TRP_NS  (18U)
-#define SDRAM_TWR_NS  (24U)
-#define SDRAM_TRC_NS  (60U)
-#define SDRAM_TRAS_NS (42U)
-#define SDRAM_TXSR_NS (70U)
-#define SDRAM_TMRD_NS (12U)
+constexpr unsigned MRD_BurstLength_Pos    = 0;
+constexpr unsigned MRD_BurstLength_Msk    = 0b111 << MRD_BurstLength_Pos;
+constexpr unsigned MRD_BurstLength        = MRD_BurstLength_Msk;
+constexpr unsigned MRD_BurstType_Pos      = 3;
+constexpr unsigned MRD_BurstType_Msk      = 0b1 << MRD_BurstType_Pos;
+constexpr unsigned MRD_BurstType          = MRD_BurstType_Msk;
+constexpr unsigned MRD_LatencyMode_Pos    = 4;
+constexpr unsigned MRD_LatencyMode_Msk    = 0b111 << MRD_LatencyMode_Pos;
+constexpr unsigned MRD_LatencyMode        = MRD_LatencyMode_Msk;
+constexpr unsigned MRD_OperatingMode_Pos  = 7;
+constexpr unsigned MRD_OperatingMode_Msk  = 0b11 << MRD_OperatingMode_Pos;
+constexpr unsigned MRD_OperatingMode      = MRD_OperatingMode_Msk;
+constexpr unsigned MRD_WriteBurstMode_Pos = 9;
+constexpr unsigned MRD_WriteBurstMode_Msk = 0b1 << MRD_WriteBurstMode_Pos;
+constexpr unsigned MRD_WriteBurstMode     = MRD_WriteBurstMode_Msk;
 
-#define RK043FN48H_HSYNC  ((uint16_t)41) /* Horizontal synchronization */
-#define RK043FN48H_HBP    ((uint16_t)13) /* Horizontal back porch      */
-#define RK043FN48H_HFP    ((uint16_t)32) /* Horizontal front porch     */
-#define RK043FN48H_VSYNC  ((uint16_t)10) /* Vertical synchronization   */
-#define RK043FN48H_VBP    ((uint16_t)2)  /* Vertical back porch        */
-#define RK043FN48H_VFP    ((uint16_t)2)  /* Vertical front porch       */
-#define RK043FN48H_WIDTH  (480U)
-#define RK043FN48H_HEIGHT (272U)
-#define RK043FN48H_HS_POL (0U)
-#define RK043FN48H_VS_POL (0U)
-#define RK043FN48H_PC_POL (0U)
-#define RK043FN48H_DE_POL (0U)
+constexpr unsigned sdram_trcd_ns = 18;
+constexpr unsigned sdram_trp_ns  = 18;
+constexpr unsigned sdram_twr_ns  = 24;
+constexpr unsigned sdram_trc_ns  = 60;
+constexpr unsigned sdram_tras_ns = 42;
+constexpr unsigned sdram_txsr_ns = 70;
+constexpr unsigned sdram_tmrd_ns = 12;
 
-#define SCREEN_WIDTH  RK043FN48H_WIDTH
-#define SCREEN_HEIGHT RK043FN48H_HEIGHT
+constexpr unsigned screen_hsync  = 41;
+constexpr unsigned screen_hbp    = 13;
+constexpr unsigned screen_hfp    = 32;
+constexpr unsigned screen_vsync  = 10;
+constexpr unsigned screen_vbp    = 2;
+constexpr unsigned screen_vfp    = 2;
+constexpr unsigned screen_width  = 480;
+constexpr unsigned screen_height = 272;
+constexpr unsigned screen_hs_pol = 0;
+constexpr unsigned screen_vs_pol = 0;
+constexpr unsigned screen_pc_pol = 0;
+constexpr unsigned screen_de_pol = 0;
 
 
 #endif

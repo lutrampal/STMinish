@@ -25,24 +25,24 @@
  * PUBLIC TYPE DEFINITIONS
  ******************************************************************************/
 
-typedef void (*irq_handler_t)(void);
+typedef void (*InterruptHandler)(void);
 
 
 /*******************************************************************************
  * EXTERN CONSTANT DECLARATIONS
  ******************************************************************************/
 
-__attribute__((aligned(0x200))) __attribute__((
-    section(".dtcm_vtable"))) extern volatile irq_handler_t g_vtable[NB_IRQS];
+__attribute__((aligned(0x200)))
+__attribute__((section(".dtcm_vtable"))) extern volatile InterruptHandler
+    g_vtable[hardware::nb_irqs];
 
 
 /*******************************************************************************
  * EXTERN FUNCTION DECLARATIONS
  ******************************************************************************/
 
-extern "C"
-{
-    void IRQ_ATTR error_handler(void);
+extern "C" {
+void IRQ_ATTR handleError(void);
 }
 
 

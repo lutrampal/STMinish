@@ -10,14 +10,15 @@
  * GLOBAL DEFINITIONS
  ******************************************************************************/
 
-__attribute__((aligned(0x200))) volatile irq_handler_t g_vtable[NB_IRQS];
+__attribute__((
+    aligned(0x200))) volatile InterruptHandler g_vtable[hardware::nb_irqs];
 
 
 /*******************************************************************************
  * EXTERN FUNCTION IMPLEMENTATIONS
  ******************************************************************************/
 
-void error_handler(void)
+void handleError(void)
 {
     while (1) {};
 }

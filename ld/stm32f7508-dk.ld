@@ -1,5 +1,5 @@
 
-ENTRY(reset_handler)
+ENTRY(handleReset)
 
 /* Set the end of stack at the end of DTCMRAM (before vector table) */
 _estack = 0x2000FC00;
