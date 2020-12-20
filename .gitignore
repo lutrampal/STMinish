@@ -11,6 +11,7 @@
 *.ko
 *.obj
 *.elf
+*.bin
 
 # Linker output
 *.ilk
@@ -82,6 +83,7 @@ dkms.conf
 ### vscode ###
 .vscode/*
 *.code-workspace
+templates/*
 
 # End of https://www.toptal.com/developers/gitignore/api/c,c++,vscode
 
