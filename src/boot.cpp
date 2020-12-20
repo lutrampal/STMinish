@@ -8,12 +8,12 @@
  * - Handing over to main()
  ******************************************************************************/
 
-#include "drivers/bsp/mcu.hpp"
-#include "irqs.hpp"
+#include "device/irqs.hpp"
+#include "hardware/mcu.hpp"
 
 #include <cstddef>
 
-using namespace hardware;
+using namespace stminish::device;
 
 #define BOOT_CODE_ATTR __attribute__((section(".boot_code")))
 
@@ -62,6 +62,7 @@ static void BOOT_CODE_ATTR m_qspiWaitForRegister(uint8_t reg,
 static void BOOT_CODE_ATTR m_initFMC();
 static void BOOT_CODE_ATTR m_initTimer(int32_t tick_time_us);
 static void BOOT_CODE_ATTR m_usleep(uint32_t usec);
+static void BOOT_CODE_ATTR m_cleanupTimer();
 
 static constexpr uint32_t BOOT_CODE_ATTR m_nsToCycles(uint32_t ns,
                                                       uint32_t clk_hz);
@@ -124,6 +125,17 @@ static void m_initTimer(int32_t tick_time_us)
 
     /* Enable TIM2 */
     m_boot_timer->CR1 |= TIM_CR1_CEN;
+}
+
+static void m_cleanupTimer()
+{
+    unsigned timer_idx =
+        (reinterpret_cast<uintptr_t>(m_boot_timer) - APB1PERIPH_BASE)
+        / 0x0400UL;
+    unsigned timer_mask = 0b1 << timer_idx;
+    m_boot_timer->CR1 &= ~TIM_CR1_CEN;
+    DBGMCU->APB1FZ &= ~timer_mask;
+    RCC->APB1ENR &= ~timer_mask;
 }
 
 static constexpr uint32_t m_nsToCycles(uint32_t ns, uint32_t clk_hz)
@@ -450,18 +462,11 @@ static void m_initData(void)
             reinterpret_cast<uint8_t*>(&_sidata)[i];
     }
 
-    size_t dtcsize =
+    size_t dtcm_size =
         reinterpret_cast<size_t>(&_edtcm) - reinterpret_cast<size_t>(&_sdtcm);
-    for (size_t i = 0; i < dtcsize; ++i) {
+    for (size_t i = 0; i < dtcm_size; ++i) {
         reinterpret_cast<uint8_t*>(&_sdtcm)[i] =
             reinterpret_cast<uint8_t*>(&_sidtcm)[i];
-    }
-
-    size_t itcsize =
-        reinterpret_cast<size_t>(&_eitcm) - reinterpret_cast<size_t>(&_sitcm);
-    for (size_t i = 0; i < itcsize; ++i) {
-        reinterpret_cast<uint8_t*>(&_sitcm)[i] =
-            reinterpret_cast<uint8_t*>(&_siitcm)[i];
     }
 
     size_t bss_size =
@@ -477,8 +482,10 @@ static void m_initVtable(void)
 
     g_vtable[0] = reinterpret_cast<InterruptHandler>(_estack);
     g_vtable[1] = handleReset;
-
+    /* All interrupts default to error handler */
     for (unsigned i = 2; i < nb_irqs; ++i) { g_vtable[i] = handleError; }
+
+    g_vtable[TIM2_IRQn + vtable_offset] = handleTIM2Event;
 }
 
 static void m_setCoreSpeed(void)
@@ -573,13 +580,17 @@ void handleReset(void)
 {
     __asm__("LDR r0, =_estack\n\t"
             "MOV sp, r0\n\t");
-
+    /* Do not break debugger when in standy or sleep mode */
+#ifdef DEBUG
+    DBGMCU->CR |= DBGMCU_CR_DBG_STANDBY | DBGMCU_CR_DBG_SLEEP;
+#endif
     m_initData();
     m_initVtable();
     m_initTimer(1);
     m_setCoreSpeed();
     m_initQSPI();
     m_initFMC();
+    m_cleanupTimer();
 
     __asm__("B main");
 }

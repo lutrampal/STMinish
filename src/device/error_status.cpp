@@ -1,49 +1,49 @@
 
 /*******************************************************************************
- * Module for all interrupt handlers (except reset)
- * This code is placed in ITCM by reset handler
- ******************************************************************************/
-
-#ifndef _IRQS_HPP
-#define _IRQS_HPP
-
-/*******************************************************************************
  * INCLUDE DIRECTIVES
  ******************************************************************************/
 
-#include "drivers/bsp/mcu.hpp"
+#include "error_status.hpp"
+
+using namespace stminish::device;
 
 
 /*******************************************************************************
- * DEFINE DIRECTIVES
+ * CONSTRUCTORS & DESTRUCTOR
  ******************************************************************************/
 
-#define IRQ_ATTR __attribute__((section(".itcm_irqs")))
-
-
-/*******************************************************************************
- * PUBLIC TYPE DEFINITIONS
- ******************************************************************************/
-
-typedef void (*InterruptHandler)(void);
-
-
-/*******************************************************************************
- * EXTERN CONSTANT DECLARATIONS
- ******************************************************************************/
-
-__attribute__((aligned(0x200)))
-__attribute__((section(".dtcm_vtable"))) extern volatile InterruptHandler
-    g_vtable[hardware::nb_irqs];
-
-
-/*******************************************************************************
- * EXTERN FUNCTION DECLARATIONS
- ******************************************************************************/
-
-extern "C" {
-void IRQ_ATTR handleError(void);
+ErrorStatus::ErrorStatus(ErrorCode code): code{code}
+{
 }
 
 
-#endif
+/*******************************************************************************
+ * OPERATOR IMPLEMENTATIONS
+ ******************************************************************************/
+
+ErrorStatus::operator bool() const
+{
+    return code != ErrorCode::Success;
+}
+
+bool ErrorStatus::operator!() const
+{
+    return code == ErrorCode::Success;
+}
+
+/*******************************************************************************
+ * PRIVATE METHOD IMPLEMENTATIONS
+ ******************************************************************************/
+
+/*******************************************************************************
+ * PROTECTED METHOD IMPLEMENTATIONS
+ ******************************************************************************/
+
+/*******************************************************************************
+ * PUBLIC METHOD IMPLEMENTATIONS
+ ******************************************************************************/
+
+ErrorCode ErrorStatus::get_code() const
+{
+    return code;
+}

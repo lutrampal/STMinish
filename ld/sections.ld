@@ -3,10 +3,20 @@ SECTIONS
 {
     .boot_code :
     {
-        . = ALIGN(4);    
-        KEEP (*(.reset))    
-        *(.boot_code)
-        *(.boot_code*)
+        . = ALIGN(4);
+        KEEP (*(.reset))
+        KEEP (*(.boot_code))
+        KEEP (*(.boot_code*))
+        . = ALIGN(4);
+    } >FLASH
+
+    /* We can't store these in QSPI because then the jump would be too long */
+    .ARM.exidx.flash :
+    {
+        . = ALIGN(4);
+        *(.ARM.exidx.boot_code)
+        *(.ARM.exidx.reset)
+        *(.ARM.exidx.itcm_irqs)
         . = ALIGN(4);
     } >FLASH
 
@@ -25,12 +35,14 @@ SECTIONS
     .ARM.extab :
     {
         *(.ARM.extab* .gnu.linkonce.armextab.*)
-    } >FLASH
+    } >QSPI
 
     .ARM :
     {
+        __exidx_start = .;
         *(.ARM.exidx*)
-    } >FLASH
+        __exidx_end = .;
+    } >QSPI
 
     .rodata :
     {
@@ -39,17 +51,6 @@ SECTIONS
         *(.rodata*)
         . = ALIGN(4);
     } >FLASH
-
-      _siitcm = .;
-    .itcm : AT(_siitcm)
-    {
-        . = ALIGN(4);
-        _sitcm = .;
-        KEEP (*(.itcm_irqs))
-        . = ALIGN(4);
-        _eitcm = .;
-    } >ITCMRAM
-
 
     /* Space for static writable, initialized to non 0 data */
     _sidata = .;
@@ -64,20 +65,20 @@ SECTIONS
     } >SRAM
 
     /* Static, writable, initialized to 0 data */
-    .bss :
+    .bss (NOLOAD):
     {
         . = ALIGN(4);
         _sbss = .;
-        *(.bss);
-        *(.bss*);
-        *(COMMON);
+        *(.bss)
+        *(.bss*)
+        *(COMMON)
         . = ALIGN(4);
         _ebss = .;
     } >SRAM
 
     /* DTCM RAM region.
      * Tightly-coupled memory on the data bus. */
-    _sidtcm = .;
+    _sidtcm = _sidata + _edata - _sdata;
     .dtcm : AT(_sidtcm)
     {
         . = ALIGN(4);
@@ -86,4 +87,16 @@ SECTIONS
         . = ALIGN(4);
         _edtcm = .;
     } >DTCMRAM_V
+
+    .heap (NOLOAD): 
+    {
+        . = ALIGN(4);
+        _sheap = .;
+        end = _sheap;
+        _end = end;
+        __end = end;
+        KEEP(*(.heap))
+        . = ALIGN(4);
+        _eheap = .;
+    } >SDRAM
 } 

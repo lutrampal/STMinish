@@ -1,6 +1,7 @@
 
 BUILD_DIR = ./build
-TARGET = $(BUILD_DIR)/main
+BUILD_TYPE = debug
+TARGET = $(BUILD_DIR)/stminish
 MCU = cortex-m7
 
 LD_SCRIPT = ./ld/stm32f7508-dk.ld
@@ -15,17 +16,26 @@ OS = arm-none-eabi-size
 GDB = arm-none-eabi-gdb
 
 WFLAGS = -Wall -Wpedantic -Wextra -Wno-unused-parameter
+CXXFLAGS = -c -mcpu=$(MCU) -mthumb -mhard-float -mfloat-abi=hard \
+	-mfpu=fpv5-sp-d16 -ffunction-sections -fdata-sections -std=c++17 -fno-rtti \
+	-specs=nano.specs -specs=nosys.specs $(WFLAGS)
 
-CXXFLAGS = -c -O0 -mcpu=$(MCU) -mthumb -g3 -mhard-float -mfloat-abi=hard \
-	-mfpu=fpv5-sp-d16 -ffunction-sections -fdata-sections \
-	-fno-exceptions -std=c++17 -fno-rtti --specs=nosys.specs $(WFLAGS)
-LFLAGS = -T $(LD_SCRIPT) -mcpu=$(MCU) -mthumb -lgcc -mhard-float \
+ifeq ($(BUILD_TYPE),debug)
+	CXXFLAGS += -O0 -g3
+	DEFINES += -DDEBUG
+else
+	CXXFLAGS += -Os
+endif
+
+LFLAGS = -T $(LD_SCRIPT) -mcpu=$(MCU) -mthumb -lstdc++ -mhard-float \
 	-mfloat-abi=hard -mfpu=fpv5-sp-d16 -Wl,--gc-sections -Wl,-L./ld \
-	--specs=nosys.specs $(WFLAGS)
+	-specs=nano.specs -specs=nosys.specs $(WFLAGS)
 
 INCLUDES = -I./include -I./src/*
 
 SRC_DIR = ./src
+ALL_SRC_DIR = $(shell find $(SRC_DIR) -type d)
+ALL_BUILD_DIR = $(subst $(SRC_DIR), $(BUILD_DIR), $(ALL_SRC_DIR))
 CXX_EXT = cpp
 
 CXX_SRC = $(shell find $(SRC_DIR) -type f -name *.$(CXX_EXT))
@@ -46,7 +56,7 @@ $(TARGET).bin: $(TARGET).elf
 	$(OS) $<
 
 $(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
+	mkdir -p $(ALL_BUILD_DIR)
 
 
 .PHONY: all flash-n-debug flash-n-debug-no-tui clean
@@ -59,4 +69,4 @@ flash-n-debug: all
 		-ex 'tui e' -ex 'layout regs' -ex 'break main' -ex 'break handleError' -ex continue -ex 'focus cmd'
 
 clean:
-	rm -rf $(BUILD_DIR)/*
+	rm -rf $(BUILD_DIR)

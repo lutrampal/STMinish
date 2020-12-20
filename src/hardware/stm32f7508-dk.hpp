@@ -1,12 +1,14 @@
 
 /*******************************************************************************
- * Do not include direcly, first define MCU and BOARD then include mcu.hpp
+ * Do not include direcly, use mcu.hpp instead
  ******************************************************************************/
 
 #ifndef STM32F7508_DK_H
 #define STM32F7508_DK_H
 
+extern "C" {
 #include <stm32f750xx.h>
+}
 
 
 /* I/O assignment for the STM32F7508 development kit */

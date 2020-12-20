@@ -1886,16 +1886,16 @@ typedef struct {
     #define TEMPSENSOR_CAL1_ADDR_CMSIS                                         \
         ((uint16_t*)(0x1FF0F44C)) /*!<Internal temperature sensor, address of  \
                                      parameter TS_CAL1: On STM32F7,            \
-                                     temperature sensor ADC raw data acquired                                                  \
-                                     at temperature 30 DegC (tolerance: +-5                                           \
-                                     DegC), Vref+ = 3.3 V (tolerance: +-10                                                \
+                                     temperature sensor ADC raw data acquired  \
+                                     at temperature 30 DegC (tolerance: +-5    \
+                                     DegC), Vref+ = 3.3 V (tolerance: +-10     \
                                      mV). */
     #define TEMPSENSOR_CAL2_ADDR_CMSIS                                         \
         ((uint16_t*)(0x1FF0F44E)) /*!<Internal temperature sensor, address of  \
                                      parameter TS_CAL2: On STM32F7,            \
-                                     temperature sensor ADC raw data acquired                                                  \
-                                     at temperature 110 DegC (tolerance: +-5                                                      \
-                                     DegC), Vref+ = 3.3 V (tolerance: +-10                                                            \
+                                     temperature sensor ADC raw data acquired  \
+                                     at temperature 110 DegC (tolerance: +-5   \
+                                     DegC), Vref+ = 3.3 V (tolerance: +-10     \
                                      mV). */
 
     /********************  Bit definition for ADC_SR register
@@ -18495,14 +18495,16 @@ typedef struct {
         SDMMC_STA_CMDACT_Msk /*!<Command transfer in progress */
     #define SDMMC_STA_TXACT_Pos (12U)
     #define SDMMC_STA_TXACT_Msk                                                \
-        (0x1UL << SDMMC_STA_TXACT_Pos)          /*!< 0x00001000 */
-    #define SDMMC_STA_TXACT SDMMC_STA_TXACT_Msk /*!<Data transmit in progress  \
-                                                 */
+        (0x1UL << SDMMC_STA_TXACT_Pos) /*!< 0x00001000 */
+    #define SDMMC_STA_TXACT                                                    \
+        SDMMC_STA_TXACT_Msk /*!<Data transmit in progress                      \
+                             */
     #define SDMMC_STA_RXACT_Pos (13U)
     #define SDMMC_STA_RXACT_Msk                                                \
-        (0x1UL << SDMMC_STA_RXACT_Pos)          /*!< 0x00002000 */
-    #define SDMMC_STA_RXACT SDMMC_STA_RXACT_Msk /*!<Data receive in progress   \
-                                                 */
+        (0x1UL << SDMMC_STA_RXACT_Pos) /*!< 0x00002000 */
+    #define SDMMC_STA_RXACT                                                    \
+        SDMMC_STA_RXACT_Msk /*!<Data receive in progress                       \
+                             */
     #define SDMMC_STA_TXFIFOHE_Pos (14U)
     #define SDMMC_STA_TXFIFOHE_Msk                                             \
         (0x1UL << SDMMC_STA_TXFIFOHE_Pos) /*!< 0x00004000 */
@@ -20838,13 +20840,12 @@ typedef struct {
     #define USART_CR1_PCE      USART_CR1_PCE_Msk /*!< Parity Control Enable */
     #define USART_CR1_WAKE_Pos (11U)
     #define USART_CR1_WAKE_Msk                                                 \
-        (0x1UL << USART_CR1_WAKE_Pos)          /*!< 0x00000800                 \
-                                                */
-    #define USART_CR1_WAKE  USART_CR1_WAKE_Msk /*!< Receiver Wakeup method */
-    #define USART_CR1_M_Pos (12U)
-    #define USART_CR1_M_Msk (0x10001UL << USART_CR1_M_Pos) /*!< 0x10001000 */
-    #define USART_CR1_M                                                        \
-        USART_CR1_M_Msk /*!< Word length */
+        (0x1UL << USART_CR1_WAKE_Pos)             /*!< 0x00000800              \
+                                                   */
+    #define USART_CR1_WAKE     USART_CR1_WAKE_Msk /*!< Receiver Wakeup method */
+    #define USART_CR1_M_Pos    (12U)
+    #define USART_CR1_M_Msk    (0x10001UL << USART_CR1_M_Pos) /*!< 0x10001000 */
+    #define USART_CR1_M        USART_CR1_M_Msk /*!< Word length */
     #define USART_CR1_M0       (0x00001UL << USART_CR1_M_Pos) /*!< 0x00001000 */
     #define USART_CR1_MME_Pos  (13U)
     #define USART_CR1_MME_Msk  (0x1UL << USART_CR1_MME_Pos) /*!< 0x00002000 */

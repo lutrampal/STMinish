@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Do not include direcly, first define MCU and BOARD then include mcu.hpp
+ * Do not include direcly, use mcu.hpp instead
  ******************************************************************************/
 
 #ifndef _STM32F750_H
@@ -27,6 +27,8 @@ constexpr unsigned core_clk_hz = 216000000;
  * PLL_clk = VCO_out_clk/PLLP */
 constexpr unsigned pllm = hse_in_clk_hz / 1000000;
 constexpr unsigned pllp = 2;
-constexpr unsigned plln = (core_clk_hz * pllp * pllm) / hse_in_clk_hz;
+constexpr unsigned plln =
+    (static_cast<uint64_t>(core_clk_hz) * static_cast<uint64_t>(pllp * pllm))
+    / static_cast<uint64_t>(hse_in_clk_hz);
 
 #endif

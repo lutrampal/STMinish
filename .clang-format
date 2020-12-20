@@ -50,7 +50,7 @@ InsertTrailingCommas: None
 KeepEmptyLinesAtTheStartOfBlocks: false
 Language: Cpp
 MaxEmptyLinesToKeep: 2
-NamespaceIndentation: All
+NamespaceIndentation: None
 PointerAlignment: Left
 SortIncludes: true
 SortUsingDeclarations: true
