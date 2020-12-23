@@ -3,8 +3,8 @@
  * [...]
  ******************************************************************************/
 
-#ifndef _STMINNISH_DRIVER_TIMER_DRIVER_HPP
-#define _STMINNISH_DRIVER_TIMER_DRIVER_HPP
+#ifndef _STMINISH_DRIVER_TIMER_DRIVER_HPP
+#define _STMINISH_DRIVER_TIMER_DRIVER_HPP
 
 /*******************************************************************************
  * INCLUDE DIRECTIVES

@@ -1,5 +1,6 @@
 
 #include "device/error_status.hpp"
+#include "driver/rng_driver.hpp"
 #include "driver/timer_driver.hpp"
 #include "event_loop.hpp"
 
@@ -10,47 +11,32 @@ using namespace stminish;
 using namespace std;
 using namespace std::placeholders;
 
-void t1(device::ErrorStatus& status)
+void r1(device::ErrorStatus& status, uint32_t res)
 {
-    uint32_t deadbeef = 0xdeadbeef;
+    static unsigned cnt = 0;
+    static unsigned stats[16];
+    if (status) {
+        return;
+    }
+
+    for (int i = 0; i < 8; ++i) {
+        stats[res & 0xF]++;
+        res >>= 4;
+    }
+    cnt++;
+
+    if (cnt == 10000) {
+        uint32_t badcocoa = 0xbadc0c0a;
+    }
 }
-
-
-void t2(TimerDriver::Timer& tim, device::ErrorStatus& status)
-{
-    uint32_t deadbeef = 0xdeadbeef;
-    tim.cancelWait();
-}
-
-void t3(device::ErrorStatus& status)
-{
-    uint32_t deadbeef = 0xdeadbeef;
-}
-
-void t4(device::ErrorStatus& status)
-{
-    uint32_t deadbeef = 0xdeadbeef;
-}
-
-void t5(device::ErrorStatus& status)
-{
-    uint32_t deadbeef = 0xdeadbeef;
-}
-
 
 int main(void)
 {
     EventLoop el;
-    driver::TimerDriver td{el};
+    driver::RngDriver rngd{el};
 
-    function<void(device::ErrorStatus&)> callback = t3;
-    TimerDriver::Timer tim = td.startWait(chrono::seconds(14), callback);
-    callback               = t4;
-    td.startWait(chrono::seconds(19), callback);
-    callback = bind(t2, tim, _1);
-    td.startWait(chrono::seconds(8), callback);
-    callback = t1;
-    td.startWait(chrono::seconds(5), callback);
+    function<void(device::ErrorStatus&, uint32_t)> callback = r1;
+    for (int i = 0; i < 10000; ++i) { rngd.startRand(callback); }
 
     el.run();
 }

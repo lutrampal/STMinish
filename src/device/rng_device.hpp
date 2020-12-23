@@ -1,16 +1,19 @@
 
 /*******************************************************************************
- * [...]
+ * Interface file for random number generator devices
  ******************************************************************************/
 
-#ifndef _STMINISH_DEVICE_ERROR_STATUS_HPP
-#define _STMINISH_DEVICE_ERROR_STATUS_HPP
+#ifndef _STMINISH_DEVICE_RNG_DEVICE_HPP
+#define _STMINISH_DEVICE_RNG_DEVICE_HPP
 
 /*******************************************************************************
  * INCLUDE DIRECTIVES
  ******************************************************************************/
 
-#include "error_code.hpp"
+#include "error_status.hpp"
+
+#include <functional>
+
 
 namespace stminish
 {
@@ -20,26 +23,25 @@ namespace device
  * CLASS DEFINITION
  ******************************************************************************/
 
-class ErrorStatus
+class RngDevice
 {
   public:
-    ErrorStatus(ErrorCode code = ErrorCode::Success);
+    static RngDevice& getInstance();
+    ~RngDevice();
 
-    ErrorCode get_code() const;
+    RngDevice(RngDevice& other) = delete;
+    void operator=(const RngDevice&) = delete;
 
-    /* @brief boolean conversion operator.
-     * @details
-     * Returns true if error code is not equal 0 i.e. any error will return
-     * true, success value will return false. */
-    operator bool() const;
-
-    /** @brief Same as !(static_cast<bool>(*this)). */
-    bool operator!() const;
+    void setRandCallback(std::function<void(ErrorStatus&&, uint32_t)> callback);
+    bool suspendRand();
+    void resumeRand();
+    void completeRand();
 
   private:
-    ErrorCode code;
-};
+    RngDevice();
 
+    std::function<void(ErrorStatus&&, uint32_t)> callback;
+};
 
 }  // namespace device
 }  // namespace stminish

@@ -3,8 +3,8 @@
  * [...]
  ******************************************************************************/
 
-#ifndef _STMINNISH_DEVICE_ERROR_CODE_HPP
-#define _STMINNISH_DEVICE_ERROR_CODE_HPP
+#ifndef _STMINISH_DEVICE_ERROR_CODE_HPP
+#define _STMINISH_DEVICE_ERROR_CODE_HPP
 
 /*******************************************************************************
  * INCLUDE DIRECTIVES

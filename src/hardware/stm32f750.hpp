@@ -30,5 +30,6 @@ constexpr unsigned pllp = 2;
 constexpr unsigned plln =
     (static_cast<uint64_t>(core_clk_hz) * static_cast<uint64_t>(pllp * pllm))
     / static_cast<uint64_t>(hse_in_clk_hz);
+constexpr unsigned pllq = 9;
 
 #endif

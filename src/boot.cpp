@@ -486,6 +486,7 @@ static void m_initVtable(void)
     for (unsigned i = 2; i < nb_irqs; ++i) { g_vtable[i] = handleError; }
 
     g_vtable[TIM2_IRQn + vtable_offset] = handleTIM2Event;
+    g_vtable[RNG_IRQn + vtable_offset]  = handleRNGEvent;
 }
 
 static void m_setCoreSpeed(void)
@@ -517,7 +518,8 @@ static void m_setCoreSpeed(void)
      * dividers */
     RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLM & ~RCC_PLLCFGR_PLLN & ~RCC_PLLCFGR_PLLP;
     RCC->PLLCFGR |= (pllm << RCC_PLLCFGR_PLLM_Pos)
-                    | (plln << RCC_PLLCFGR_PLLN_Pos) | RCC_PLLCFGR_PLLSRC_HSE;
+                    | (plln << RCC_PLLCFGR_PLLN_Pos)
+                    | (pllq << RCC_PLLCFGR_PLLQ_Pos) | RCC_PLLCFGR_PLLSRC_HSE;
 
     /* The PLL is now setup to run at full speed.
      * We may now enable it and fait for it to be ready */

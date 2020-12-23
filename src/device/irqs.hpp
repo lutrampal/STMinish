@@ -43,6 +43,7 @@ __attribute__((aligned(0x200))) __attribute__((section(
 
 void handleError(void);
 void handleTIM2Event(void);
+void handleRNGEvent(void);
 }
 
 inline void enableInterrupts()

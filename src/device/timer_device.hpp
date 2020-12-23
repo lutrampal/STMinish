@@ -1,16 +1,15 @@
 
 /*******************************************************************************
- * [...]
+ * Interface file for timer devices
  ******************************************************************************/
 
-#ifndef _STMINNISH_DEVICE_TIMER_DEVICE_HPP
-#define _STMINNISH_DEVICE_TIMER_DEVICE_HPP
+#ifndef _STMINISH_DEVICE_TIMER_DEVICE_HPP
+#define _STMINISH_DEVICE_TIMER_DEVICE_HPP
 
 /*******************************************************************************
  * INCLUDE DIRECTIVES
  ******************************************************************************/
 
-#include "context.hpp"
 #include "error_status.hpp"
 
 #include <chrono>

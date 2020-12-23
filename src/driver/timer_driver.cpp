@@ -8,6 +8,8 @@
 #include "../device/irqs.hpp"
 #include "driver_exceptions.hpp"
 
+#include <algorithm>
+
 
 using namespace std;
 using namespace std::placeholders;
@@ -88,8 +90,9 @@ void TimerDriver::cancelWait(Handle handle)
         /* The wait operation hasn't started, or maybe it was already executed.
          * We'll remove it from the wait queue & add its wait time to the
          * request that was supposed to run after it */
-        auto it = ++wait_queue.begin();
-        while (it->handle != handle && it != wait_queue.end()) { it++; }
+        auto it =
+            find_if(++wait_queue.begin(), wait_queue.end(),
+                    [handle](const WaitOp& op) { return op.handle == handle; });
         if (it == wait_queue.end()) {
             /* The handle does not exist, the wait operation was already
              * executed */

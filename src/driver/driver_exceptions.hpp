@@ -3,8 +3,8 @@
  * [...]
  ******************************************************************************/
 
-#ifndef _STMINNISH_DRIVER_DRIVER_EXCEPTIONS_HPP
-#define _STMINNISH_DRIVER_DRIVER_EXCEPTIONS_HPP
+#ifndef _STMINISH_DRIVER_DRIVER_EXCEPTIONS_HPP
+#define _STMINISH_DRIVER_DRIVER_EXCEPTIONS_HPP
 
 /*******************************************************************************
  * INCLUDE DIRECTIVES

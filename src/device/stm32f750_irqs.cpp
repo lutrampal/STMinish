@@ -9,6 +9,7 @@
 
 #include "../hardware/mcu.hpp"
 #include "irqs.hpp"
+#include "rng_device.hpp"
 #include "timer_device.hpp"
 
 using namespace stminish;
@@ -43,6 +44,15 @@ void handleTIM2Event(void)
         } catch (const std::exception& e) {
             // TODO: what can we do here?..
         }
+    }
+}
+
+void handleRNGEvent(void)
+{
+    try {
+        RngDevice::getInstance().completeRand();
+    } catch (const std::exception& e) {
+        // TODO: what can we do here?..
     }
 }
 }
