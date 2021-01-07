@@ -1,32 +1,24 @@
 
 /*******************************************************************************
+ * Implementation file of generic TimerDevice class
+ ******************************************************************************/
+
+/*******************************************************************************
  * INCLUDE DIRECTIVES
  ******************************************************************************/
 
-#include "rng_driver.hpp"
+#include "timer_device.hpp"
 
-#include "../device/irqs.hpp"
-#include "driver_exceptions.hpp"
-
-#include <algorithm>
-
+#include "../hardware/mcu.hpp"
 
 using namespace std;
-using namespace std::placeholders;
-using namespace stminish::driver;
 using namespace stminish::device;
 
 
+#ifdef MCU_STM32F750
 /*******************************************************************************
  * CONSTRUCTORS & DESTRUCTOR
  ******************************************************************************/
-
-RngDriver::RngDriver(EventLoop& event_loop, device::RngDevice& dev)
-: event_loop{event_loop}, dev{dev}
-{
-    dev.setRandCallback(bind(&RngDriver::completeRand, this, _1, _2));
-}
-
 
 /*******************************************************************************
  * OPERATOR IMPLEMENTATIONS
@@ -36,17 +28,6 @@ RngDriver::RngDriver(EventLoop& event_loop, device::RngDevice& dev)
  * PRIVATE METHOD IMPLEMENTATIONS
  ******************************************************************************/
 
-void RngDriver::completeRand(device::ErrorStatus&& status, uint32_t rand)
-{
-    event_loop.pushEvent(bind(rand_queue.front().callback, status, rand));
-    rand_queue.pop_front();
-
-    if (!rand_queue.empty()) {
-        dev.resumeRand();
-    }
-}
-
-
 /*******************************************************************************
  * PROTECTED METHOD IMPLEMENTATIONS
  ******************************************************************************/
@@ -55,15 +36,10 @@ void RngDriver::completeRand(device::ErrorStatus&& status, uint32_t rand)
  * PUBLIC METHOD IMPLEMENTATIONS
  ******************************************************************************/
 
-void RngDriver::startRand(function<void(ErrorStatus&, uint32_t)> event_callback)
+void TimerDevice::setWaitCallback(std::function<void(ErrorStatus&&)> callback)
 {
-    dev.suspendRand();
-
-    if (rand_queue.empty()) {
-        rand_queue.push_front(RandOp{event_callback});
-    } else {
-        rand_queue.push_back(RandOp{event_callback});
-    }
-
-    dev.resumeRand();
+    this->callback = callback;
 }
+
+
+#endif

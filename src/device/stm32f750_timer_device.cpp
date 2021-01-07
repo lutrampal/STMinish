@@ -8,19 +8,19 @@
  * INCLUDE DIRECTIVES
  ******************************************************************************/
 
+#include "stm32f750_timer_device.hpp"
+
 #include "../hardware/mcu.hpp"
-#include "timer_device.hpp"
 
 using namespace std;
 using namespace stminish::device;
 
 
-#ifdef MCU_STM32F750
 /*******************************************************************************
  * CONSTRUCTORS & DESTRUCTOR
  ******************************************************************************/
 
-TimerDevice::TimerDevice()
+Stm32f750TimerDevice::Stm32f750TimerDevice()
 {
     NVIC_SetPriority(TIM2_IRQn, 0);
     RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
@@ -39,12 +39,13 @@ TimerDevice::TimerDevice()
     TIM2->DIER |= TIM_DIER_UIE;
 }
 
-TimerDevice::~TimerDevice()
+Stm32f750TimerDevice::~Stm32f750TimerDevice()
 {
     TIM2->DIER &= ~TIM_DIER_UIE;
     TIM2->CR1 &= ~TIM_CR1_CEN;
     RCC->APB1ENR &= ~RCC_APB1ENR_TIM2EN;
 }
+
 
 /*******************************************************************************
  * OPERATOR IMPLEMENTATIONS
@@ -62,24 +63,31 @@ TimerDevice::~TimerDevice()
  * PUBLIC METHOD IMPLEMENTATIONS
  ******************************************************************************/
 
-TimerDevice& TimerDevice::getInstance()
-{
-    static TimerDevice instance;
-
-    return instance;
-}
-
-void TimerDevice::setWaitCallback(std::function<void(ErrorStatus&&)> callback)
-{
-    this->callback = callback;
-}
-
-TimerDevice::WaitTimeUnitDuration TimerDevice::getRemainingWaitTime()
+TimerDevice::WaitTimeUnitDuration Stm32f750TimerDevice::getRemainingWaitTime()
 {
     return TimerDevice::WaitTimeUnitDuration{programmed_count - TIM2->CNT};
 }
 
-void TimerDevice::startWait(WaitTimeUnitDuration::rep count)
+void Stm32f750TimerDevice::usleep(WaitTimeUnitDuration::rep count)
+{
+    /* Set the event period:
+     * A TIM2 event is generated when the counter is equal to ARR */
+    TIM2->ARR        = count;
+    programmed_count = count;
+    /* URS is set to avoid generating interrupt when we set UG, OPM is used to
+     * turn off the counter once it went off. */
+    TIM2->CR1 |= TIM_CR1_OPM | TIM_CR1_URS;
+    /* Reset the counter and apply new config */
+    TIM2->EGR |= TIM_EGR_UG;
+    /* Enable TIM2 */
+    TIM2->CR1 |= TIM_CR1_CEN;
+
+    while ((TIM2->SR & TIM_SR_UIF) == 0) {}
+
+    TIM2->SR &= ~TIM_SR_UIF;
+}
+
+void Stm32f750TimerDevice::startWait(WaitTimeUnitDuration::rep count)
 {
     NVIC_EnableIRQ(TIM2_IRQn);
     /* Set the event period:
@@ -95,14 +103,14 @@ void TimerDevice::startWait(WaitTimeUnitDuration::rep count)
     TIM2->CR1 |= TIM_CR1_CEN;
 }
 
-bool TimerDevice::suspendWait()
+bool Stm32f750TimerDevice::suspendWait()
 {
     TIM2->CR1 &= ~TIM_CR1_CEN;
     NVIC_DisableIRQ(TIM2_IRQn);
     return true;
 }
 
-bool TimerDevice::cancelWait()
+bool Stm32f750TimerDevice::cancelWait()
 {
     /* Nothing to do in particular aside from suspending, settings will be
      * erased by next startWait() call */
@@ -111,16 +119,14 @@ bool TimerDevice::cancelWait()
     return true;
 }
 
-void TimerDevice::resumeWait()
+void Stm32f750TimerDevice::resumeWait()
 {
     NVIC_EnableIRQ(TIM2_IRQn);
     TIM2->CR1 |= TIM_CR1_CEN;
 }
 
-void TimerDevice::completeWait()
+void Stm32f750TimerDevice::completeWait()
 {
     /* No need to disable the timer as we've set TIM_CR1_OPM */
     callback(ErrorStatus{ErrorCode::Success});
 }
-
-#endif

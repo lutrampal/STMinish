@@ -29,7 +29,7 @@ namespace driver
 class RngDriver
 {
   public:
-    RngDriver(EventLoop& event_loop);
+    RngDriver(EventLoop& event_loop, device::RngDevice& dev);
 
     void startRand(
         std::function<void(device::ErrorStatus&, uint32_t)> event_callback);

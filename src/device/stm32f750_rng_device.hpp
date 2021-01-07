@@ -1,16 +1,17 @@
 
 /*******************************************************************************
- * Interface file for random number generator devices
+ * Interface file for random number generator device of STM32F750
  ******************************************************************************/
 
-#ifndef _STMINISH_DEVICE_RNG_DEVICE_HPP
-#define _STMINISH_DEVICE_RNG_DEVICE_HPP
+#ifndef _STMINISH_DEVICE_STM32F750_RNG_DEVICE_HPP
+#define _STMINISH_DEVICE_STM32F750_RNG_DEVICE_HPP
 
 /*******************************************************************************
  * INCLUDE DIRECTIVES
  ******************************************************************************/
 
 #include "error_status.hpp"
+#include "rng_device.hpp"
 
 #include <functional>
 
@@ -23,17 +24,15 @@ namespace device
  * CLASS DEFINITION
  ******************************************************************************/
 
-class RngDevice
+class Stm32f750RngDevice : public RngDevice
 {
   public:
-    void setRandCallback(std::function<void(ErrorStatus&&, uint32_t)> callback);
+    Stm32f750RngDevice();
+    ~Stm32f750RngDevice();
 
-    virtual bool suspendRand()  = 0;
-    virtual void resumeRand()   = 0;
-    virtual void completeRand() = 0;
-
-  protected:
-    std::function<void(ErrorStatus&&, uint32_t)> callback;
+    bool suspendRand() override;
+    void resumeRand() override;
+    void completeRand() override;
 };
 
 }  // namespace device

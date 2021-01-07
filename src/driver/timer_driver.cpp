@@ -26,8 +26,8 @@ TimerDriver::Timer::Timer(TimerDriver& owner, Handle handle)
 {
 }
 
-TimerDriver::TimerDriver(EventLoop& event_loop)
-: event_loop{event_loop}, dev{TimerDevice::getInstance()}
+TimerDriver::TimerDriver(EventLoop& event_loop, device::TimerDevice& dev)
+: event_loop{event_loop}, dev{dev}
 {
     dev.setWaitCallback(bind(&TimerDriver::completeWait, this, _1));
 }

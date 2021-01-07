@@ -30,7 +30,7 @@ namespace driver
 class TimerDriver
 {
   public:
-    TimerDriver(EventLoop& event_loop);
+    TimerDriver(EventLoop& event_loop, device::TimerDevice& dev);
     typedef unsigned Handle;
 
     class Timer

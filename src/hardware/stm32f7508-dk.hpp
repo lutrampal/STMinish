@@ -34,6 +34,8 @@ extern "C" {
 #define SPDIF_RX0_GPIO_Port            GPIOD
 #define SDMMC_CK_Pin                   12
 #define SDMMC_CK_GPIO_Port             GPIOC
+#define USD_DETECT_Pin                 13
+#define USD_DETECT_GPIO_Port           GPIOC
 #define ARDUINO_PWM_D9_Pin             15
 #define ARDUINO_PWM_D9_GPIO_Port       GPIOA
 #define SWCLK_Pin                      14
@@ -68,6 +70,10 @@ extern "C" {
 #define SDMMC_D3_GPIO_Port             GPIOC
 #define SDMMC_D2_Pin                   10
 #define SDMMC_D2_GPIO_Port             GPIOC
+#define SDMMC_D1_Pin                   9
+#define SDMMC_D1_GPIO_Port             GPIOC
+#define SDMMC_D0_Pin                   8
+#define SDMMC_D0_GPIO_Port             GPIOC
 #define OTG_FS_P_Pin                   12
 #define OTG_FS_P_GPIO_Port             GPIOA
 #define NC1_Pin                        8

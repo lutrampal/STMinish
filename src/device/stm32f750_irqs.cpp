@@ -9,8 +9,7 @@
 
 #include "../hardware/mcu.hpp"
 #include "irqs.hpp"
-#include "rng_device.hpp"
-#include "timer_device.hpp"
+#include "system.hpp"
 
 using namespace stminish;
 using namespace stminish::device;
@@ -40,7 +39,7 @@ void handleTIM2Event(void)
         /* clear interrupt */
         TIM2->SR &= ~TIM_SR_UIF;
         try {
-            TimerDevice::getInstance().completeWait();
+            System::getInstance().getTimer().completeWait();
         } catch (const std::exception& e) {
             // TODO: what can we do here?..
         }
@@ -50,7 +49,7 @@ void handleTIM2Event(void)
 void handleRNGEvent(void)
 {
     try {
-        RngDevice::getInstance().completeRand();
+        System::getInstance().getRng().completeRand();
     } catch (const std::exception& e) {
         // TODO: what can we do here?..
     }

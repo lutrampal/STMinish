@@ -16,9 +16,9 @@ OS = arm-none-eabi-size
 GDB = arm-none-eabi-gdb
 
 WFLAGS = -Wall -Wpedantic -Wextra -Wno-unused-parameter
-CXXFLAGS = -c -mcpu=$(MCU) -mthumb -mhard-float -mfloat-abi=hard \
-	-mfpu=fpv5-sp-d16 -ffunction-sections -fdata-sections -std=c++17 -fno-rtti \
-	-specs=nano.specs -specs=nosys.specs $(WFLAGS)
+CXXFLAGS = -c -mcpu=$(MCU) -mthumb -mhard-float -mfloat-abi=hard -fexceptions \
+	-mfpu=fpv5-sp-d16 -ffunction-sections -fdata-sections -std=c++17 \
+	 -specs=nosys.specs $(WFLAGS)
 
 ifeq ($(BUILD_TYPE),debug)
 	CXXFLAGS += -O0 -g3
@@ -29,7 +29,7 @@ endif
 
 LFLAGS = -T $(LD_SCRIPT) -mcpu=$(MCU) -mthumb -lstdc++ -mhard-float \
 	-mfloat-abi=hard -mfpu=fpv5-sp-d16 -Wl,--gc-sections -Wl,-L./ld \
-	-specs=nano.specs -specs=nosys.specs $(WFLAGS)
+	 -specs=nosys.specs $(WFLAGS)
 
 INCLUDES = -I./include -I./src/*
 

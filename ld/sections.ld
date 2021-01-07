@@ -27,7 +27,9 @@ SECTIONS
         *(.text*)
         KEEP (*(.init))
         KEEP (*(.fini))
+        KEEP (*(.eh_frame_hdr))
         KEEP (*(.eh_frame))
+        KEEP (*(.gcc_except_table))
         . = ALIGN(4);
     } >QSPI
 

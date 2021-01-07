@@ -43,29 +43,16 @@ enum class SelFunc {
     Output
 };
 
-enum class Bank {
-    GpioA,
-    GpioB,
-    GpioC,
-    GpioD,
-    GpioE,
-    GpioF,
-    GpioG,
-    GpioH,
-    GpioI,
-    GpioJ,
-    GpioK
-};
-
 enum class PinSpeed { Low, Medium, High, VeryHigh };
 
-typedef unsigned PinIndex;
+enum class PullMode { NoPull, PullUp, PullDown };
 
 struct GpioFuncConfigFailure : std::exception {
-    Bank bank;
-    PinIndex index;
+    GPIO_TypeDef* bank;
+    unsigned int index;
 
-    GpioFuncConfigFailure(Bank bank, PinIndex index): bank{bank}, index{index}
+    GpioFuncConfigFailure(GPIO_TypeDef* bank, unsigned int index)
+    : bank{bank}, index{index}
     {
     }
 
@@ -80,7 +67,11 @@ struct GpioFuncConfigFailure : std::exception {
  * EXTERNAL FUNCTION DECLARATIONS
  ******************************************************************************/
 
-void GpioFunctionConfigure(Bank bank, PinIndex pin, SelFunc sel, PinSpeed spd);
+void gpioFunctionConfigure(GPIO_TypeDef* bank,
+                           unsigned int pin,
+                           SelFunc sel,
+                           PinSpeed spd,
+                           PullMode pull = PullMode::NoPull);
 
 
 }  // namespace device
