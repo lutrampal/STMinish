@@ -20,6 +20,10 @@ constexpr unsigned cmd2 = 2;
 
 constexpr unsigned cmd3 = 3;
 
+constexpr unsigned acmd6               = 6;
+constexpr unsigned acmd6_bus_width_pos = 0;
+constexpr unsigned acmd6_bus_width     = 0x3 << acmd6_bus_width_pos;
+
 constexpr unsigned cmd7 = 7;
 
 constexpr unsigned cmd8                    = 8;
@@ -27,6 +31,8 @@ constexpr unsigned cmd8_supply_voltage_pos = 8;
 constexpr unsigned cmd8_supply_voltage     = 0xF << cmd8_supply_voltage_pos;
 constexpr unsigned cmd8_check_pattern_pos  = 0;
 constexpr unsigned cmd8_check_pattern      = 0xFF << cmd8_check_pattern_pos;
+
+constexpr unsigned cmd9 = 9;
 
 constexpr unsigned cmd11 = 11;
 
@@ -40,9 +46,10 @@ constexpr unsigned acmd41_s18r     = 1 << acmd41_s18r_pos;
 constexpr unsigned acmd41_ocr_pos  = 8;
 constexpr unsigned acmd41_ocr      = 0xFFFF << acmd41_ocr_pos;
 
-constexpr unsigned cmd55         = 55;
-constexpr unsigned cmd55_rca_pos = 16;
-constexpr unsigned cmd55_rca     = 0xFFFF << cmd55_rca_pos;
+constexpr unsigned cmd55 = 55;
+
+constexpr unsigned cmd_rca_pos = 16;
+constexpr unsigned cmd_rca     = 0xFFFF << cmd_rca_pos;
 
 
 /*******************************************************************************
@@ -96,6 +103,12 @@ constexpr unsigned status_ake_seq_err_pos    = 3;
 constexpr unsigned status_ake_seq_err        = 1 << status_ake_seq_err_pos;
 /* A mask to display all error bits */
 constexpr unsigned status_err_msk = 0xF9D90008;
+
+enum class SdCardState { Idle, Ready, Ident, Stby, Tran, Data, Rcv, Prg, Dis };
+
+constexpr unsigned r2_1_csize_pos = 16;
+constexpr unsigned r2_1_csize     = 0xFFFF << r2_1_csize_pos;
+
 
 constexpr unsigned r3_busy_pos = 31;
 constexpr unsigned r3_busy     = 1 << r3_busy_pos;

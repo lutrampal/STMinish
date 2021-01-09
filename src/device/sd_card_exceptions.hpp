@@ -10,10 +10,7 @@
  * INCLUDE DIRECTIVES
  ******************************************************************************/
 
-#include "error_status.hpp"
-
-#include <functional>
-#include <vector>
+#include "sd_card_specs.hpp"
 
 namespace stminish
 {
@@ -48,6 +45,30 @@ struct SdCardCmdFailure : SdCardException {
     virtual const char* what()
     {
         return "SD card command failed";
+    }
+};
+
+struct InvalidSdCardStateException : SdCardException {
+    sdcard::SdCardState expected;
+    sdcard::SdCardState actual;
+
+    InvalidSdCardStateException(sdcard::SdCardState expected,
+                                sdcard::SdCardState actual)
+    : expected{expected}, actual{actual}
+    {
+    }
+
+    const char* what()
+    {
+        return "SD card is not in the state it is suppposed to be";
+    }
+};
+
+struct UnsupportedSdCardException : SdCardException {
+    const char* what()
+    {
+        return "Inserted SD Card is not supported (only SDHC cards are "
+               "supported)";
     }
 };
 

@@ -35,6 +35,12 @@ class Stm32f750SdCardDevice : public SdCardDevice
     /* Return card clock to setup delay for power up sequence */
     uint32_t enableDevice() override;
     void disableDevice() override;
+    void setMaxClockSpeed() override;
+    uint8_t getMaxBusWidth() override;
+    void setMaxControllerBusWidth() override;
+
+  private:
+    static constexpr uint8_t max_bus_width = 4;
 };
 
 }  // namespace device

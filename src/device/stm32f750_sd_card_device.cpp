@@ -126,7 +126,9 @@ uint32_t Stm32f750SdCardDevice::enableDevice()
     /* SDMMC_CK must be less than 400kHz while in id phase */
     uint32_t clkdiv      = 255;
     uint32_t sdmmc_ck_hz = 48000000 / (clkdiv + 2);
-    SDMMC1->CLKCR = SDMMC_CLKCR_CLKEN | (clkdiv << SDMMC_CLKCR_CLKDIV_Pos);
+    SDMMC1->CLKCR =
+        SDMMC_CLKCR_CLKEN | (clkdiv << SDMMC_CLKCR_CLKDIV_Pos)
+        | SDMMC_CLKCR_HWFC_EN;  // TODO: check behavior of HW flow control
     /* Power on the card */
     SDMMC1->POWER |= 0b11 << SDMMC_POWER_PWRCTRL_Pos;
 
@@ -138,6 +140,26 @@ void Stm32f750SdCardDevice::disableDevice()
     SDMMC1->CLKCR &= ~SDMMC_CLKCR_CLKEN;
     SDMMC1->POWER &= ~SDMMC_POWER_PWRCTRL;
     RCC->APB2ENR &= ~RCC_APB2ENR_SDMMC1EN;
+}
+
+void Stm32f750SdCardDevice::setMaxClockSpeed()
+{
+    /* Disable clock in order to change settings */
+    SDMMC1->CLKCR &= ~SDMMC_CLKCR_CLKEN;
+    /* Set clock to 24 MHz */
+    SDMMC1->CLKCR &= ~SDMMC_CLKCR_CLKDIV;
+    SDMMC1->CLKCR |= SDMMC_CLKCR_CLKEN;
+}
+
+uint8_t Stm32f750SdCardDevice::getMaxBusWidth()
+{
+    return max_bus_width;
+}
+
+void Stm32f750SdCardDevice::setMaxControllerBusWidth()
+{
+    SDMMC1->CLKCR &= ~SDMMC_CLKCR_WIDBUS;
+    SDMMC1->CLKCR |= 0b01 << SDMMC_CLKCR_WIDBUS_Pos;
 }
 
 
